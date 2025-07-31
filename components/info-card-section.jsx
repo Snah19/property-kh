@@ -12,8 +12,8 @@ const info = [
     id: "for-property-owners",
     headline: "For Property Owners",
     body: "List your properties and reach potential tenants",
-    link: "/properties/add",
-    linkTitle: "Add Property"
+    link: "/properties/post",
+    linkTitle: "Post Property"
   }
 ];
 
