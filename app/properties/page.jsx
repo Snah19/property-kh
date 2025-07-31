@@ -1,7 +1,9 @@
+import PropertyGridSection from "@/components/property-grid-section";
+
 const PropertiesPage = () => {
   return (
     <>
-      <h1>Properties Page</h1>
+      <PropertyGridSection />
     </>
   );
 };
