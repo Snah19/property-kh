@@ -56,7 +56,7 @@ const Header = () => {
             <ul className="hidden md:flex gap-x-2">
               {navlinks.map(({id, name, link}) => (
                 <li key={id}>
-                  <Link className={`${pathname === link ? "bg-gray-900" : null} rounded-md py-2 px-3 hover:bg-gray-700 text-white`} href={link}>
+                  <Link className={`${pathname === link ? "bg-gray-900 hover:bg-gray-900" : null} rounded-md py-2 px-3 hover:bg-gray-700 text-white`} href={link}>
                     {name}
                   </Link>
                 </li>
