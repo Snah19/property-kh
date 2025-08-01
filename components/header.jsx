@@ -7,8 +7,10 @@ import logo from "@/assets/images/logo-white.png";
 import { usePathname } from "next/navigation";
 import SvgBell from "./svg-bell";
 import defaultProfile from "@/assets/images/default-profile.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaGoogle } from "react-icons/fa";
+// NextAuth
+import { signIn, signOut, useSession, getProviders } from "next-auth/react";
 
 
 const navlinks = [
@@ -30,12 +32,34 @@ const navlinks = [
 ];
 
 const Header = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isSignedIn, setIsSignedIn] = useState(true);
+  const [isHamburgerMenuOpen, setIsHamburgerMenuOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const pathname = usePathname();
 
+  const [nextAuthProviders, setNextAuthProviders] = useState(null);
+  const { data: session, status } = useSession();
+  const userProfile = session?.user?.image;
+
+  useEffect(() => {
+    const setAuthProviders = async () => {
+      const authProviders = await getProviders();
+      setNextAuthProviders(authProviders);
+    };
+
+    setAuthProviders();
+  }, []);
+
   const handleHamburgerMenu = () => {
-    setIsOpen(curr => !curr);
+    setIsHamburgerMenuOpen(curr => !curr);
+  };
+
+  const handleProfileMenu = () => {
+    setIsProfileMenuOpen(curr => !curr);
+  };
+
+  const handleSignOut = () => {
+    setIsProfileMenuOpen(curr => !curr);
+    signOut();
   };
 
   return (
@@ -64,24 +88,48 @@ const Header = () => {
             </ul>
           </div>
           
-          <div className="inline-flex gap-x-2">
-            <Link className={`relative ${isSignedIn ? "inline" : "hidden"} p-1 rounded-full bg-gray-800 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800`} href="/notifications">
+          <div className="relative inline-flex gap-x-2">
+            <Link className={`relative ${session ? "inline" : "hidden"} p-1 rounded-full bg-gray-800 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white`} href="/notifications">
               <SvgBell />
               <span className="absolute -top-3 -right-2 py-1 px-2 text-sm font-bold leading-none rounded-full bg-red-600 text-white">1</span>
             </Link>
-            <Link className={`${isSignedIn ? "inline" : "hidden"}`} href="/profile">
-              <Image className="w-8 h-8 rounded-full" src={defaultProfile} width={512} height={512} alt={`User Profile Picture`} />
-            </Link>
-            <button className={`${isSignedIn ? "hidden" : "flex"} items-center gap-x-2 py-2 px-3 rounded-md bg-gray-700 hover:bg-gray-900 text-white`}>
-              <FaGoogle />
-              <span>Sign In</span>
+
+            <button className={`${session ? "inline" : "hidden"} rounded-full focus:outline-none focus:ring-2 focus:ring-white`} onClick={handleProfileMenu}>
+              <Image className="w-8 h-8 rounded-full" src={userProfile || defaultProfile} width={512} height={512} alt={`User Profile Picture`} />
             </button>
+            <ul className={`z-10 ${isProfileMenuOpen ? "block" : "hidden"} absolute top-10 right-0 w-36 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none bg-white`}>
+              {
+                [
+                  {menu: "Your Profile", link: "/profile"},
+                  {menu: "Bookmarks", link: "/properties/bookmarks"},
+                ].map(({menu, link}, i) => (
+                  <li key={i}>
+                    <Link className="block py-2 px-4 text-sm text-gray-700 hover:text-black" href={link} tabIndex={-1} onClick={handleProfileMenu}>
+                      {menu}
+                    </Link>
+                  </li>
+                ))
+              }
+              <li>
+                <button className="block py-2 px-4 text-sm text-gray-700 hover:text-black" tabIndex={-1} onClick={handleSignOut}>
+                  Sign Out
+                </button>
+              </li>
+            </ul>
+              
+            {nextAuthProviders && Object.values(nextAuthProviders).map(({id}, i) => (
+              <button className={`${session ? "hidden" : "flex"} items-center gap-x-2 py-2 px-3 rounded-md bg-gray-700 hover:bg-gray-900 text-white`} key={i} onClick={() => signIn(id)}>
+                <FaGoogle />
+                <span>Sign In</span>
+              </button>
+            ))}
+
           </div>
             
         </div>
       </nav>
 
-      <nav className={`${isOpen ? "block" : "hidden"} md:hidden space-y-1 p-2`}>
+      <nav className={`${isHamburgerMenuOpen ? "block" : "hidden"} md:hidden space-y-1 p-2`}>
         <ul className="flex flex-col gap-y-2">
           {navlinks.map(({id, name, link}) => (
             <li key={id}>
