@@ -1,10 +1,13 @@
 import Link from "next/link";
 import { Suspense } from "react";
-import properties from "@/properties.json";
 import PropertyListFallback from "./property-list-fallback";
 import PropertyList from "./property-list";
+import connectToMongoDB from "@/config/mongodb";
+import Property from "@/models/property";
 
-const RecentPropertiesSection = () => {
+const RecentPropertiesSection = async () => {
+  await connectToMongoDB();
+  const properties = await Property.find().sort({ createdAt: -1 }).limit(8);
 
   return (
     <>

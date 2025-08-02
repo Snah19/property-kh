@@ -16,13 +16,13 @@ const PropertyCard = ({property}) => {
       </span>
 
       <Link href={`/properties/${property._id}`}>
-        <Image className="w-full h-auto rounded-t-xl" src={`/images/properties/${property.images[0]}`} width={1280} height={720} alt={`${property.type} image`} />
+        <Image className="w-full h-auto rounded-t-xl" src={property.images[0]} width={1280} height={720} alt={`${property.type} image`} />
       </Link>
       <div className="p-4">
 
         <div className="mb-6 text-center">
           <p className="mb-2 text-gray-600">{property.type}</p>
-          <h3 className="text-lg font-bold">{property.name}</h3>
+          <h3 className="text-lg font-bold">{property.title}</h3>
         </div>
 
         <div className="flex justify-center gap-x-4 mb-4 text-gray-500 text-sm leading-none">

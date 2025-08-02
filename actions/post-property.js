@@ -18,7 +18,7 @@ const postProperty = async (formData) => {
   const propertyData = {
     owner: userId,
     type: formData.get("type"),
-    name: formData.get("name"),
+    title: formData.get("title"),
     description: formData.get("description"),
     location: {
       street: formData.get("location.street"),
@@ -54,7 +54,6 @@ const postProperty = async (formData) => {
   }
 
   propertyData.images = imageUrls;
-
   const newProperty = new Property(propertyData);
   await newProperty.save();
 

@@ -134,7 +134,7 @@ const PostPropertyForm = () => {
                   <label htmlFor={`${rateType.toLowerCase()}_rate`}>
                     {rateType}
                   </label>
-                  <input className="w-full py-2 px-3 border rounded" id={`${rateType.toLowerCase()}_rate`} name={`rate.${rateType}`} type="number" />
+                  <input className="w-full py-2 px-3 border rounded" id={`${rateType.toLowerCase()}_rate`} name={`rates.${rateType.toLowerCase()}`} type="number" />
                 </li>
               ))
             }
