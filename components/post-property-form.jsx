@@ -1,3 +1,5 @@
+import postProperty from "@/actions/post-property";
+
 
 const types = [
   "Apartment",
@@ -38,7 +40,7 @@ const amenities = [
 
 const PostPropertyForm = () => {
   return (
-    <form>
+    <form action={postProperty}>
       <h2 className="mb-6 text-3xl font-semibold text-center">
         Post
       </h2>

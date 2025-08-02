@@ -12,7 +12,6 @@ import { FaGoogle } from "react-icons/fa";
 // NextAuth
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
 
-
 const navlinks = [
   {
     id: "home-page",
@@ -37,7 +36,7 @@ const Header = () => {
   const pathname = usePathname();
 
   const [nextAuthProviders, setNextAuthProviders] = useState(null);
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const userProfile = session?.user?.image;
 
   useEffect(() => {
@@ -129,6 +128,7 @@ const Header = () => {
         </div>
       </nav>
 
+      {/* Mobile Nav Links */}
       <nav className={`${isHamburgerMenuOpen ? "block" : "hidden"} md:hidden space-y-1 p-2`}>
         <ul className="flex flex-col gap-y-2">
           {navlinks.map(({id, name, link}) => (
