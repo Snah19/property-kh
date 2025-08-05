@@ -1,6 +1,7 @@
 import BackToProperties from "@/components/back-to-properties";
 import PropertyDetail from "@/components/property-detail";
 import PropertyHeaderImage from "@/components/property-header-image";
+import PropertyImages from "@/components/property-images";
 import Property from "@/models/property";
 
 const PropertyDetailPage = async ({ params }) => {
@@ -12,6 +13,7 @@ const PropertyDetailPage = async ({ params }) => {
       <PropertyHeaderImage property={property} />
       <BackToProperties />
       <PropertyDetail property={property} />
+      <PropertyImages images={property.images} />
     </>
   );
 };

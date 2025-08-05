@@ -1,5 +1,6 @@
 import { poppins } from "@/fonts";
 import "./globals.css";
+import 'photoswipe/dist/photoswipe.css';
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import NextAuthProvider from "@/components/next-auth-provider";
