@@ -77,13 +77,23 @@ const Header = () => {
             </Link>
 
             <ul className="hidden md:flex gap-x-2">
-              {navlinks.map(({id, name, link}) => (
-                <li key={id}>
-                  <Link className={`${pathname === link ? "bg-gray-900 hover:bg-gray-900" : null} rounded-md py-2 px-3 hover:bg-gray-700 text-white`} href={link}>
-                    {name}
-                  </Link>
-                </li>
-              ))}
+              {navlinks.map(({id, name, link}) => {
+                let isActive;
+
+                if (link === "/") {
+                  isActive = pathname === "/";
+                } else {
+                  isActive = pathname === link || pathname.startsWith(link + "/");
+                }
+                
+                return (
+                  <li key={id}>
+                    <Link className={`${isActive ? "bg-gray-900 hover:bg-gray-900" : null} rounded-md py-2 px-3 hover:bg-gray-700 text-white`} href={link}>
+                      {name}
+                    </Link>
+                  </li>
+                )
+              })}
             </ul>
           </div>
           
@@ -133,7 +143,7 @@ const Header = () => {
         <ul className="flex flex-col gap-y-2">
           {navlinks.map(({id, name, link}) => (
             <li key={id}>
-              <Link className={`${pathname === link ? "bg-gray-900 hover:bg-gray-900" : null} block rounded-md py-2 px-3 hover:bg-gray-700 text-white`} href={link}>
+              <Link className={`${pathname.startsWith(link) ? "bg-gray-900 hover:bg-gray-900" : null} block rounded-md py-2 px-3 hover:bg-gray-700 text-white`} href={link}>
                 {name}
               </Link>
             </li>

@@ -3,6 +3,8 @@ import "./globals.css";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import NextAuthProvider from "@/components/next-auth-provider";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 export const metadata = {
   title: {
@@ -27,6 +29,7 @@ export default function RootLayout({ children }) {
           <footer className="py-4 bg-gray-200">
             <Footer />
           </footer>
+          <ToastContainer />
         </body>
       </html>
     </NextAuthProvider>

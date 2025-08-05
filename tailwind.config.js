@@ -10,7 +10,10 @@ module.exports = {
       screens: {
         xsm: "500px",
         sm: "600px",
-      }
+      },
+      gridTemplateColumns: {
+        '70/28': '70% 28%'
+      },
     },
   },
   plugins: [],

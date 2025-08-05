@@ -1,0 +1,68 @@
+---
+components/property-contact-form.jsx :
+
+"use client";
+
+import { useActionState, useEffect } from "react";
+
+const PropertyContactForm = ({ property }) => {
+    const [state, formAction] = useActionState(sendMessage, {});
+
+    useEffect(() => {
+        if (state?.isSubmitted) {
+            toast.success(state.message || "Message sent!");
+
+            const form = document.querySelector("form");
+            if (form) form.reset();
+        }
+        else if (state?.error) {
+            toast.error(state.error);
+        }
+    }, [state]);
+    
+    return (
+        <form action={formAction}>
+            {
+            /*
+            return new FormData({property,recipient,name,email,phone,body})
+            */
+            }
+        </form>
+    );
+};
+
+---
+actions/send-message.js
+
+"use server";
+
+import connectToMongoDB from "@/config/mongodb";
+import Message from "@/models/message";
+import { getSessionUser } from "@/utils/get-session-user";
+
+const sendMessage = async (_prevState, formData) => {
+    await connectToMongoDB();
+    const sessionUser = await getSessionUser();
+
+    if (!sessionUser || !sessionUser.userId) throw new Error("User ID is required");
+
+    const { userId } = sessionUser;
+
+    if (userId === formData.get("recipient")) return { error: "You cannot send a message to yourself" };
+
+    const message = new Message({
+        sender_id: userId,
+        recipient_id: formData.get("recipient_id),
+        property_id: formData.get("property_id"),
+        name: formData.get("name"),
+        email: formData.get("email"),
+        phone_number: formData.get("phone_number"),
+        body: formData.get("body")
+    });
+
+    await message.save();
+
+    return { isSubmitted: true, message: "Message sent successfully" };
+};
+
+export default sendMessage();
