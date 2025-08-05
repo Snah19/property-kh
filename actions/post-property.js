@@ -58,7 +58,7 @@ const postProperty = async (formData) => {
   await newProperty.save();
 
   revalidatePath("/", "layout");
-  // redirect(`/properties/${newProperty._id}`);
+  redirect(`/properties/${newProperty._id}`);
   console.log("Property is posted successfully!");
 };
 

@@ -16,7 +16,15 @@ const PropertyCard = ({property}) => {
       </span>
 
       <Link href={`/properties/${property._id}`}>
-        <Image className="w-full h-auto rounded-t-xl" src={property.images[0]} width={1280} height={720} alt={`${property.type} image`} />
+        <div className="aspect-video w-full rounded-t-xl overflow-hidden">
+          <Image
+            className="w-full h-full object-cover"
+            src={property.images[0]}
+            width={1280}
+            height={720}
+            alt={`${property.type} image`}
+          />
+        </div>
       </Link>
       <div className="p-4">
 

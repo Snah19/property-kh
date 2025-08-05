@@ -66,7 +66,7 @@ const PostPropertyForm = () => {
           <label className="block mb-2 font-bold text-gray-700" htmlFor="title">
             Title
           </label>
-          <input className="w-full mb-2 py-2 px-3 border rounded" id="title" name="title" type="text" placeholder="e.g. Beautiful Apartment In Phnom Penh." required />
+          <input className="w-full mb-2 py-2 px-3 border rounded" id="title" name="title" type="text" maxLength={30} placeholder="e.g. Beautiful Apartment In Phnom Penh." required />
         </div>
 
         {/* Description */}
@@ -97,7 +97,7 @@ const PostPropertyForm = () => {
                 <label className="block mb-2 font-bold text-gray-700" htmlFor={attribute.toLowerCase()}>
                   {attribute.split("_").join(" ")}
                 </label>
-                <input className="w-full py-2 px-3 border rounded" id={attribute.toLowerCase()} name={attribute.toLowerCase()} type="number" />
+                <input className="w-full py-2 px-3 border rounded" id={attribute.toLowerCase()} name={attribute.toLowerCase()} type="number" required />
               </li>
             ))
           }
