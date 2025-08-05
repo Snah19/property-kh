@@ -26,7 +26,7 @@ const navlinks = [
   {
     id: "post-properties-page",
     name: "Post Property",
-    link: "/properties/post",
+    link: "/post-property",
   }
 ];
 
@@ -63,7 +63,7 @@ const Header = () => {
 
   return (
     <>
-      <nav className="mx-auto px-2 sm:px-6 lg:px-8">
+      <nav className={`mx-auto px-2 sm:px-6 lg:px-8 ${isHamburgerMenuOpen ? "border-b border-blue-500" : ""}`}>
         <div className="flex justify-between items-center h-20">
 
           <button className="inline-flex md:hidden justify-center items-center p-2 rounded-md hover:bg-gray-700 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" onClick={handleHamburgerMenu}>
@@ -88,7 +88,7 @@ const Header = () => {
                 
                 return (
                   <li key={id}>
-                    <Link className={`${isActive ? "bg-gray-900 hover:bg-gray-900" : null} rounded-md py-2 px-3 hover:bg-gray-700 text-white`} href={link}>
+                    <Link className={`${isActive ? "bg-gray-900 hover:bg-gray-900" : null} rounded-md py-2 px-3 hover:bg-gray-700 text-white`} href={link} onClick={handleHamburgerMenu}>
                       {name}
                     </Link>
                   </li>
@@ -141,13 +141,21 @@ const Header = () => {
       {/* Mobile Nav Links */}
       <nav className={`${isHamburgerMenuOpen ? "block" : "hidden"} md:hidden space-y-1 p-2`}>
         <ul className="flex flex-col gap-y-2">
-          {navlinks.map(({id, name, link}) => (
+          {navlinks.map(({id, name, link}) => {
+              let isActive;
+
+              if (link === "/") {
+                isActive = pathname === "/";
+              } else {
+                isActive = pathname === link || pathname.startsWith(link + "/");
+              }
+            return (
             <li key={id}>
-              <Link className={`${pathname.startsWith(link) ? "bg-gray-900 hover:bg-gray-900" : null} block rounded-md py-2 px-3 hover:bg-gray-700 text-white`} href={link}>
+              <Link className={`${isActive ? "bg-gray-900 hover:bg-gray-900" : null} block rounded-md py-2 px-3 hover:bg-gray-700 text-white`} href={link} onClick={handleHamburgerMenu}>
                 {name}
               </Link>
             </li>
-          ))}
+            )})}
         </ul>
       </nav>
     </>
