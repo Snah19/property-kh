@@ -21,7 +21,7 @@ const navlinks = [
   {
     id: "properties-page",
     name: "Properties",
-    link: "/properties"
+    link: "/properties?page=1"
   },
   {
     id: "post-properties-page",
@@ -78,22 +78,16 @@ const Header = () => {
 
             <ul className="hidden md:flex gap-x-2">
               {navlinks.map(({id, name, link}) => {
-                let isActive;
-
-                if (link === "/") {
-                  isActive = pathname === "/";
-                } else {
-                  isActive = pathname === link || pathname.startsWith(link + "/");
-                }
-                
+                const basePath = link.split("?")[0];
+                const isActive = basePath === "/" ? pathname === "/" : pathname.startsWith(basePath);       
                 return (
                   <li key={id}>
-                    <Link className={`${isActive ? "bg-gray-900 hover:bg-gray-900" : null} rounded-md py-2 px-3 hover:bg-gray-700 text-white`} href={link} onClick={handleHamburgerMenu}>
+                    <Link className={`${isActive ? "bg-gray-900 hover:bg-gray-900" : ""} rounded-md py-2 px-3 hover:bg-gray-700 text-white`} href={link} onClick={handleHamburgerMenu}>
                       {name}
                     </Link>
                   </li>
-                )
-              })}
+                )}
+              )}
             </ul>
           </div>
           
@@ -142,20 +136,16 @@ const Header = () => {
       <nav className={`${isHamburgerMenuOpen ? "block" : "hidden"} md:hidden space-y-1 p-2`}>
         <ul className="flex flex-col gap-y-2">
           {navlinks.map(({id, name, link}) => {
-              let isActive;
-
-              if (link === "/") {
-                isActive = pathname === "/";
-              } else {
-                isActive = pathname === link || pathname.startsWith(link + "/");
-              }
+            const basePath = link.split("?")[0];
+            const isActive = basePath === "/" ? pathname === "/" : pathname.startsWith(basePath);            
             return (
             <li key={id}>
-              <Link className={`${isActive ? "bg-gray-900 hover:bg-gray-900" : null} block rounded-md py-2 px-3 hover:bg-gray-700 text-white`} href={link} onClick={handleHamburgerMenu}>
+              <Link className={`${isActive ? "bg-gray-900 hover:bg-gray-900" : ""} block rounded-md py-2 px-3 hover:bg-gray-700 text-white`} href={link} onClick={handleHamburgerMenu}>
                 {name}
               </Link>
             </li>
-            )})}
+            )}
+          )}
         </ul>
       </nav>
     </>

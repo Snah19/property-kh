@@ -7,7 +7,7 @@ import Property from "@/models/property";
 
 const RecentPropertiesSection = async () => {
   await connectToMongoDB();
-  const properties = await Property.find().sort({ createdAt: -1 }).limit(8);
+  const properties = await Property.find().sort({ createdAt: -1 }).limit(12);
 
   return (
     <>
@@ -15,10 +15,10 @@ const RecentPropertiesSection = async () => {
         <h2 className="mb-6 text-3xl font-bold text-center text-blue-500">
           Recent Properties
         </h2>
-        <Suspense fallback={<PropertyListFallback limit={8} />}>
-          <PropertyList properties={properties.slice(-8)} />
+        <Suspense fallback={<PropertyListFallback limit={12} />}>
+          <PropertyList properties={properties} />
         </Suspense>
-        <Link className="block max-w-lg mt-6 mx-auto py-4 px-6 rounded-xl bg-black hover:bg-gray-700 text-white text-center" href="/properties">
+        <Link className="block max-w-lg mt-6 mx-auto py-4 px-6 rounded-xl bg-black hover:bg-gray-700 text-white text-center" href="/properties?page=1">
           View All Properties
         </Link>
       </section>

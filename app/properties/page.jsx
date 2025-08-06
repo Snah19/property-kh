@@ -1,9 +1,10 @@
 import PropertyGridSection from "@/components/property-grid-section";
 
-const PropertiesPage = () => {
+const PropertiesPage = async ({ searchParams }) => {
+  const { page } = await searchParams;
   return (
     <>
-      <PropertyGridSection />
+      <PropertyGridSection page={Number(page)} />
     </>
   );
 };
