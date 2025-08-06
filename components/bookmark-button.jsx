@@ -19,7 +19,7 @@ const BookmarkButton = ({ property }) => {
       if (res.error) toast(res.error);
       if (res.isBookmarked) setIsBookmarked(res.isBookmarked);
     });
-  }, [property._id, userId, checkBookmarkStatus]);
+  }, [property._id, userId]);
 
   const handleClick = async () => {
     if (!userId) {

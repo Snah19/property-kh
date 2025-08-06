@@ -105,7 +105,7 @@ const Header = () => {
               {
                 [
                   {menu: "Your Profile", link: `/profile/${userId}`},
-                  {menu: "Bookmarks", link: "/properties/bookmarks"},
+                  {menu: "Bookmarks", link: "/bookmarks"},
                 ].map(({menu, link}, i) => (
                   <li key={i}>
                     <Link className="block py-2 px-4 text-sm text-gray-700 hover:text-black" href={link} tabIndex={-1} onClick={handleProfileMenu}>
