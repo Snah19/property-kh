@@ -1,5 +1,9 @@
 import PostPropertyForm from "@/components/post-property-form";
 
+export const metadata = {
+  title: "Post Property",
+};
+
 const PostProperty = () => {
   return (
     <section className="container max-w-2xl mx-auto py-24">

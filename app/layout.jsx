@@ -9,7 +9,7 @@ import { ToastContainer } from "react-toastify";
 
 export const metadata = {
   title: {
-    template: "%s | Property KH",
+    template: "Property KH | %s",
     default: "Property KH"
   },
   keywords: 'rental, property, real estate',

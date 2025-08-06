@@ -38,6 +38,7 @@ const Header = () => {
   const [nextAuthProviders, setNextAuthProviders] = useState(null);
   const { data: session } = useSession();
   const userProfile = session?.user?.image;
+  const userId = session?.user?.id;
 
   useEffect(() => {
     const setAuthProviders = async () => {
@@ -103,7 +104,7 @@ const Header = () => {
             <ul className={`z-10 ${isProfileMenuOpen ? "block" : "hidden"} absolute top-10 right-0 w-36 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none bg-white`}>
               {
                 [
-                  {menu: "Your Profile", link: "/profile"},
+                  {menu: "Your Profile", link: `/profile/${userId}`},
                   {menu: "Bookmarks", link: "/properties/bookmarks"},
                 ].map(({menu, link}, i) => (
                   <li key={i}>
