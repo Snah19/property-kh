@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { FaGoogle } from "react-icons/fa";
 // NextAuth
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
+import { useNotificationContext } from "@/contexts/notification-context";
 
 const navlinks = [
   {
@@ -34,6 +35,7 @@ const Header = () => {
   const [isHamburgerMenuOpen, setIsHamburgerMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const { unreadCount } = useNotificationContext();
 
   const [nextAuthProviders, setNextAuthProviders] = useState(null);
   const { data: session } = useSession();
@@ -95,7 +97,7 @@ const Header = () => {
           <div className="relative inline-flex gap-x-2">
             <Link className={`relative ${session ? "inline" : "hidden"} p-1 rounded-full bg-gray-800 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white`} href="/notifications">
               <SvgBell />
-              <span className="absolute -top-3 -right-2 py-1 px-2 text-sm font-bold leading-none rounded-full bg-red-600 text-white">1</span>
+              {unreadCount !== 0 && <span className="absolute -top-3 -right-2 py-1 px-2 text-sm font-bold leading-none rounded-full bg-red-600 text-white">{unreadCount}</span>}
             </Link>
 
             <button className={`${session ? "inline" : "hidden"} rounded-full focus:outline-none focus:ring-2 focus:ring-white`} onClick={handleProfileMenu}>
