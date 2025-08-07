@@ -1,19 +1,21 @@
 "use server";
 
-import cloudinary from "@/config/cloudinary";
 import connectToMongoDB from "@/config/mongodb";
-import { getSessionUser } from "@/utils/get-session-user";
 import Property from "@/models/property";
+import { getSessionUser } from "@/utils/get-session-user";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-const postProperty = async (formData) => {
+const updateProperty = async (propertyId, formData) => {
   await connectToMongoDB();
   const sessionUser = await getSessionUser();
 
   if (!sessionUser || !sessionUser.userId) throw new Error("User ID is required");
 
   const { userId } = sessionUser;
+  const property = await Property.findById(propertyId);
+
+  if (property.owner.toString() !== userId) throw new Error("You do not own this property");
 
   const propertyData = {
     owner: userId,
@@ -39,26 +41,14 @@ const postProperty = async (formData) => {
       name: formData.get("seller_info.name"),
       email: formData.get("seller_info.email"),
       phone: formData.get("seller_info.phone")
-    }
+    },
   };
 
-  const imageUrls = [];
-  const images = formData.getAll("images").filter(({name}) => name !== "");
-  for (const image of images) {
-    const imageBuffer = await image.arrayBuffer();
-    const imageArray = Array.from(new Uint8Array(imageBuffer));
-    const imageData = Buffer.from(imageArray);
-    const imageBase64 = imageData.toString("base64");
-    const result = await cloudinary.uploader.upload(`data:image/png;base64,${imageBase64}`, {folder: "PropertyKH"});
-    imageUrls.push(result.secure_url);
-  }
-
-  propertyData.images = imageUrls;
-  const newProperty = new Property(propertyData);
-  await newProperty.save();
+  const updatedProperty = await Property.findByIdAndUpdate(propertyId, propertyData);
 
   revalidatePath("/", "layout");
-  redirect(`/properties/${newProperty._id}`);
+  
+  redirect(`/properties/${updatedProperty._id}`);
 };
 
-export default postProperty;
+export default updateProperty;

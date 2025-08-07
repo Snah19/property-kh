@@ -41,16 +41,14 @@ const amenities = [
 const PostPropertyForm = () => {
   return (
     <form action={postProperty}>
-      <h2 className="mb-6 text-3xl font-semibold text-center">
-        Post
-      </h2>
+      <h2 className="mb-6 text-3xl font-semibold text-center">Post</h2>
       
       {/* Type */}
       <div className="mb-4">
         <label className="block mb-2 font-bold text-gray-700" htmlFor="type">
           Type
         </label>
-        <select className="w-full py-2 px-3 border rounded" id="type" name="type">
+        <select className="w-full py-2 px-3 border rounded" id="type" name="type" required>
           {
             types.map((type, index) => (
               <option key={index} value={type}>

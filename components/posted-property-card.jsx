@@ -6,8 +6,10 @@ import { LuBath } from "react-icons/lu";
 import { MdOutlineBed } from "react-icons/md";
 import { FaMoneyCheckDollar } from "react-icons/fa6";
 import { HiLocationMarker } from "react-icons/hi";
+import { MdEdit } from "react-icons/md";
+import DeletePropertyButton from "./delete-property-button";
 
-const PropertyCard = ({ property }) => {
+const PostedPropertyCard = ({ property }) => {
   return (
     <article className="relative rounded-xl shadow-md">
 
@@ -64,18 +66,19 @@ const PropertyCard = ({ property }) => {
           </p>
         </div>
         <hr className="mb-5" />
-        <div className="flex flex-col lg:flex-row justify-between mb-4">
-          <div className="flex items-center gap-2 mb-4 lg:mb-0">
+        <div className="flex justify-between mb-4">
+          <div className="flex items-center gap-2">
             <HiLocationMarker />
             <span>{property.location.city}, {property.location.state}</span>
           </div>
-          <Link className="py-2 px-4 rounded-lg text-sm text-center bg-blue-500 hover:bg-blue-600 text-white" href={`/properties/${property._id}`}>
-            Details
-          </Link>
+          <div className="flex gap-x-2">
+            <Link className="group flex justify-center items-center" href={`/update-property/${property._id.toString()}`}><MdEdit className="group-hover:text-blue-500" /></Link>
+            <DeletePropertyButton propertyId={property._id.toString()} />
+          </div>
         </div>
       </div>
     </article>
   );
 };
 
-export default PropertyCard;
+export default PostedPropertyCard;
