@@ -3,11 +3,21 @@ import { HiLocationMarker } from "react-icons/hi";
 import { MdOutlineBed } from "react-icons/md";
 import { LuBath } from "react-icons/lu";
 import { LiaRulerCombinedSolid } from "react-icons/lia";
+import connectToMongoDB from "@/config/mongodb";
+import User from "@/models/user";
+import Link from "next/link";
+import Image from "next/image";
 
-const PropertyInfo = ({ property }) => {
-  const { type, title, location, rates, beds, baths, square_feet, description, amenities } = property;
+const PropertyInfo = async ({ property }) => {
+  await connectToMongoDB();
+
+  const { type, title, location, rates, beds, baths, square_feet, description, amenities, owner } = property;
   const { street, city, state, zipcode } = location;
   const { nightly, weekly, monthly } = rates;
+
+  const { username, image } = await User.findById(owner);
+
+  console.log(username);
   return (
     <article>
       <div className="p-6 rounded-lg shadow-md text-center md:text-left bg-white">
@@ -59,6 +69,12 @@ const PropertyInfo = ({ property }) => {
               </li>
             ))}
           </ul>
+        </div>
+        <div className="flex flex-col justify-center items-center w-max mt-6 ml-auto py-2 px-4 rounded-full border">
+          <Link className="inline-flex items-center gap-x-2" href={`/profile/${owner}`} >
+            <Image className="rounded-full" src={image} width={40} height={40} alt="profile image" />
+            <span className="text-gray-700 hover:text-black">{username}</span>
+          </Link>
         </div>
       </div>
     </article>
