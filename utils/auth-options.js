@@ -16,7 +16,6 @@ export const authOptions = {
       }
     })
   ],
-
   callbacks: {
     async signIn({ profile }) {
       const { email, name, picture: image} = profile;
@@ -37,5 +36,5 @@ export const authOptions = {
       session.user.id = user._id.toString();
       return session;
     }
-  }
+  },
 };

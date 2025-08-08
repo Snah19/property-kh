@@ -10,11 +10,13 @@ const NotificationPage = async () => {
   const unreadMessages = await Message.find({ recipient_id: userId, is_read: false }).sort({ createdAt: -1 }).populate("sender_id", "username").populate("property_id", "title").lean();
   const messages = [...unreadMessages, ...readMessages];
 
+  console.log(messages);
+
   return (
     <section className="container mx-auto py-6 px-4">
       <h1 className="mb-4 text-3xl font-bold">Notifications</h1>
       {readMessages.length === 0 && unreadMessages.length === 0 ? (
-        <p>No noticiations</p>
+        <p className="text-center">No noticiations</p>
       ): (
         <ul className="space-y-4">
           {messages.map(({ _id, is_read, property_id: {title}, body, email, phone_number, createdAt }) => (
