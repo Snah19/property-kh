@@ -1,6 +1,9 @@
 "use client";
 
-const propertyTypes = [
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
+const types = [
   "All",
   "Apartment",
   "Studio",
@@ -12,36 +15,46 @@ const propertyTypes = [
   "Other"
 ];
 
-const PropertySearchForm = () => {
+const PropertySearchForm = ({initSearchQuery = "", initType = "All"}) => {
+  const [searchQuery, setSearchQuery] = useState(initSearchQuery);
+  const [type, setType] = useState(initType);
+
+  const router = useRouter();
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.error("Not yet implemented");
+    if (searchQuery === "" && type === "All") {
+      router.push("/properties");
+    }
+    else {
+      const query = `?searchQuery=${searchQuery}&type=${type}`;
+      router.push(`/properties/search-results${query}`);
+    }
   }
 
   const handleSearch = (e) => {
     e.preventDefault();
 
-    console.error("Not yet implemented");
+    setSearchQuery(e.target.value);
   }
 
   const handleSelect = (e) => {
     e.preventDefault();
 
-    console.error("Not yet implemented");
+    setType(e.target.value);
   };
 
   return (
-    <form className="flex flex-col md:flex-row items-center max-w-2xl w-full mt-3" onSubmit={handleSubmit}>
+    <form className="flex flex-col md:flex-row items-center max-w-2xl w-full" onSubmit={handleSubmit}>
       <div className="w-full md:w-3/5 mb-4 md:mb-0 md:pr-2">
         <label className="sr-only" htmlFor="location">Location</label>
-        <input className="w-full py-3 px-4 rounded-lg bg-white text-gray-800 focus:outline-none focus:ring focus:ring-blue-500" id="location" type="text" placeholder="Enter Location (City, State, Zip, etc...)" onChange={handleSearch} />
+        <input className="w-full py-3 px-4 rounded-lg bg-white text-gray-800 focus:outline-none focus:ring focus:ring-blue-500" id="location" type="text" placeholder="Enter Location (City, State, Zip, etc...)" onChange={handleSearch} defaultValue={searchQuery} />
       </div>
       <div className="w-full md:w-2/5 md:pl-2">
         <label className="sr-only" htmlFor="property-type">Property Type</label>
-        <select className="w-full py-3 px-4 rounded-lg bg-white text-gray-800 focus:outline-none focus:ring focus:ring-blue-500" onChange={handleSelect}>
-          {propertyTypes.map((property, index) => (
+        <select className="w-full py-3 px-4 rounded-lg bg-white text-gray-800 focus:outline-none focus:ring focus:ring-blue-500" onChange={handleSelect} defaultValue={type}>
+          {types.map((property, index) => (
             <option key={index} value={property}>{property}</option>
           ))}
         </select>

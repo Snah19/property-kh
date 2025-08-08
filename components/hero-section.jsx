@@ -10,7 +10,7 @@ const HeroSection = () => {
         <p className="my-4 text-xl text-white">
           Discover the perfect property that suits your needs.
         </p>
-        <PropertySearchForm />
+        <PropertySearchForm initSearchQuery="" initType="All"  />
       </article>
     </section>
   );
