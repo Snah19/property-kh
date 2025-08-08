@@ -32,7 +32,7 @@ const ProfilePage = async ({ params }) => {
         </article>
 
         <div className="py-8 px-6 rounded-md shadow-md border">
-          {userId === sessionUser.userId ? (
+          {userId === sessionUser?.userId ? (
             <PostedPropertyList properties={properties} />
           ) : (
             <PropertyList properties={properties} />
