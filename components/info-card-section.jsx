@@ -5,7 +5,7 @@ const info = [
     id: "for-renters",
     headline: "For Renters",
     body: "Find your dream rental property. Bookmark properties and contact owners.",
-    link: "/properties",
+    link: "/properties?page=1",
     linkTitle: "Browse Properties"
   },
   {
