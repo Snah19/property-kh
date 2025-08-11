@@ -3,6 +3,7 @@ import Property from "@/models/property";
 import Image from "next/image";
 import defaultProfile from "@/assets/images/default-profile.png";
 import PostedPropertyList from "@/components/posted-property-list";
+import connectToMongoDB from "@/config/mongodb";
 import { getSessionUser } from "@/utils/get-session-user";
 import PropertyList from "@/components/property-list";
 
@@ -39,7 +40,6 @@ const ProfilePage = async ({ params }) => {
           ) : (
             <PropertyList properties={properties} />
           )}
-          
         </div>
       </section>
     </>
