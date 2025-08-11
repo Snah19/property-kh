@@ -1,7 +1,7 @@
 import PropertyGridSection from "@/components/property-grid-section";
 
 export const metadata = {
-  title: "roperties",
+  title: "Properties",
 };
 
 const PropertiesPage = async ({ searchParams }) => {

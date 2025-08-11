@@ -6,7 +6,9 @@ import PostedPropertyList from "@/components/posted-property-list";
 import { getSessionUser } from "@/utils/get-session-user";
 import PropertyList from "@/components/property-list";
 
-const { default: connectToMongoDB } = require("@/config/mongodb");
+export const metadata = {
+  title: "Profile",
+};
 
 const ProfilePage = async ({ params }) => {
   await connectToMongoDB();

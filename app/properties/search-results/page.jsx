@@ -4,6 +4,10 @@ import Property from "@/models/property";
 import PropertyList from "@/components/property-list";
 
 
+export const metadata = {
+  title: "Search Results",
+};
+
 const SearchResultsPage = async ({ searchParams }) => {
   await connectToMongoDB();
   const { searchQuery, type } = await searchParams;

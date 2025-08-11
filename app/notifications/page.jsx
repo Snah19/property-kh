@@ -3,6 +3,10 @@ import connectToMongoDB from "@/config/mongodb";
 import Message from "@/models/message";
 import { getSessionUser } from "@/utils/get-session-user";
 
+export const metadata = {
+  title: "Notifications",
+};
+
 const NotificationPage = async () => {
   await connectToMongoDB();
   const { userId } = await getSessionUser();

@@ -3,6 +3,9 @@ import connectToMongoDB from "@/config/mongodb";
 import User from "@/models/user";
 import { getSessionUser } from "@/utils/get-session-user";
 
+export const metadata = {
+  title: "Bookmarks",
+};
 
 const BookmarkPage = async () => {
   await connectToMongoDB();

@@ -3,6 +3,10 @@ import connectToMongoDB from "@/config/mongodb";
 import Property from "@/models/property";
 import { getSessionUser } from "@/utils/get-session-user";
 
+export const metadata = {
+  title: "Update Property",
+};
+
 const UpdatePropertyPage = async ({ params }) => {
   await connectToMongoDB();
 
