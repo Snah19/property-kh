@@ -7,7 +7,7 @@ import { getSessionUser } from "@/utils/get-session-user";
 const checkBookmarkStatus = async (propertyId) => {
   await connectToMongoDB();
   const sessionUser = await getSessionUser();
-  if (!sessionUser || !sessionUser.userId) throw new Error("User ID is required");
+  if (!sessionUser || !sessionUser.userId) return { isBookmarked: false };
 
   const { userId } = sessionUser;
   const user = await User.findById(userId);
