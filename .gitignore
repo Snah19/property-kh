@@ -42,3 +42,5 @@ next-env.d.ts
 
 # client secret
 client_secret_669436796673-34067le70l10ki86assva9bes7q5ku3o.apps.googleusercontent.com.json
+# Local Netlify folder
+.netlify
