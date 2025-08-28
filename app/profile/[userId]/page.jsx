@@ -1,11 +1,8 @@
 import User from "@/models/user";
-import Property from "@/models/property";
 import Image from "next/image";
 import defaultProfile from "@/assets/images/default-profile.png";
-import PostedPropertyList from "@/components/posted-property-list";
 import connectToMongoDB from "@/config/mongodb";
-import { getSessionUser } from "@/utils/get-session-user";
-import PropertyList from "@/components/property-list";
+import PostedPropertyGrid from "@/components/posted-property-grid";
 
 export const metadata = {
   title: "Profile",
@@ -14,11 +11,7 @@ export const metadata = {
 const ProfilePage = async ({ params }) => {
   await connectToMongoDB();
   const { userId } = await params;
-
-  const sessionUser = await getSessionUser();
-
   const {username, email, image} = await User.findOne({_id: userId});
-  const properties = await Property.find({owner: userId});
   
   return (
     <>
@@ -33,14 +26,7 @@ const ProfilePage = async ({ params }) => {
           </div>
           <h2 className="text-3xl font-bold">Posted Properties :</h2>
         </article>
-
-        <div className="py-8 px-6 rounded-md shadow-md border">
-          {userId === sessionUser?.userId ? (
-            <PostedPropertyList properties={properties} />
-          ) : (
-            <PropertyList properties={properties} />
-          )}
-        </div>
+        <PostedPropertyGrid userId={userId} />
       </section>
     </>
   );

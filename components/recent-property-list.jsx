@@ -2,7 +2,7 @@ import PropertyCard from "./property-card";
 import connectToMongoDB from "@/config/mongodb";
 import Property from "@/models/property";
 
-const RecentPropertyList = async ({ page }) => {
+const RecentPropertyList = async () => {
   await connectToMongoDB();
   const properties = await Property.find().sort({ createdAt: -1 }).limit(12);
   return (

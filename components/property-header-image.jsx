@@ -1,7 +1,10 @@
+import connectToMongoDB from "@/config/mongodb";
 import Image from "next/image";
+import Property from "@/models/property";
 
-const PropertyHeaderImage =  ({ property }) => {
-  const { images, title } = property;
+const PropertyHeaderImage = async ({ propertyId }) => {
+  connectToMongoDB();
+  const { images, title } = await Property.findById(propertyId).select("images title");
   return (
     <section>
       <figure className="mx-auto">

@@ -1,8 +1,10 @@
 import BackToProperties from "@/components/back-to-properties";
 import PropertyDetail from "@/components/property-detail";
 import PropertyHeaderImage from "@/components/property-header-image";
+import PropertyHeaderImageFallback from "@/components/property-header-image-fallback";
 import PropertyImages from "@/components/property-images";
 import Property from "@/models/property";
+import { Suspense } from "react";
 
 const PropertyDetailPage = async ({ params }) => {
   const { id } = await params;
@@ -10,9 +12,12 @@ const PropertyDetailPage = async ({ params }) => {
   const property = JSON.parse(JSON.stringify(propertyDoc));
   return (
     <>
-      <PropertyHeaderImage property={property} />
+      <Suspense fallback={<PropertyHeaderImageFallback />}>
+        <PropertyHeaderImage propertyId={id} />
+      </Suspense>
       <BackToProperties />
-      <PropertyDetail property={property} />
+
+      <PropertyDetail propertyId={id} />
       <PropertyImages images={property.images} />
     </>
   );

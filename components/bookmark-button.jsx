@@ -8,18 +8,18 @@ import { MdBookmarkAdd } from "react-icons/md";
 import { MdBookmarkAdded } from "react-icons/md";
 import { toast } from "react-toastify";
 
-const BookmarkButton = ({ property }) => {
+const BookmarkButton = ({ propertyId }) => {
   const { data: session } = useSession();
   const userId = session?.user?.id;
 
   const [isBookmarked, setIsBookmarked] = useState(false);
 
   useEffect(() => {
-    checkBookmarkStatus(property._id).then((res) => {
+    checkBookmarkStatus(propertyId).then((res) => {
       if (res.error) toast(res.error);
       if (res.isBookmarked) setIsBookmarked(res.isBookmarked);
     });
-  }, [property._id, userId]);
+  }, [propertyId, userId]);
 
   const handleClick = async () => {
     if (!userId) {
@@ -27,7 +27,7 @@ const BookmarkButton = ({ property }) => {
       return;
     }
 
-    bookmarkProperty(property._id).then((res) => {
+    bookmarkProperty(propertyId).then((res) => {
       if (res.error) return toast.error(res.error);
 
       setIsBookmarked(res.isBookmarked);

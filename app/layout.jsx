@@ -7,6 +7,7 @@ import NextAuthProvider from "@/components/next-auth-provider";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { NotificationProvider } from "@/contexts/notification-context";
+import 'ldrs/react/Wobble.css'
 
 export const metadata = {
   title: {

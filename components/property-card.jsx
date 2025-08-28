@@ -10,7 +10,6 @@ import { HiLocationMarker } from "react-icons/hi";
 const PropertyCard = ({ property }) => {
   return (
     <article className="relative rounded-xl shadow-md">
-
       <span className="absolute top-[10px] right-[10px] py-2 px-4 rounded-full font-bold bg-white text-blue-500 text-right md:text-center lg:text-right">
         {getRateDisplay(property.rates)}
       </span>

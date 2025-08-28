@@ -36,7 +36,7 @@ const formElements = [
   },
 ];
 
-const PropertyContactForm = ({ property }) => {
+const PropertyContactForm = ({ propertyId, ownerId }) => {
   const [state, formAction] = useActionState(sendMessage, {});
   const { pending } = useFormStatus();
 
@@ -56,8 +56,8 @@ const PropertyContactForm = ({ property }) => {
     <div className="p-4 rounded-lg shadow-md bg-white">
       <h3 className="mb-6 text-xl font-bold">Contact Owner</h3>
       <form action={formAction}>
-        <input type="hidden" name="property_id" defaultValue={property._id} />
-        <input type="hidden" name="recipient_id" defaultValue={property.owner} />
+        <input type="hidden" name="property_id" defaultValue={propertyId} />
+        <input type="hidden" name="recipient_id" defaultValue={ownerId} />
         <ul className="flex flex-col gap-y-4 mb-4">
           {formElements.map(({id, name, type, placeholder, required, isBody}) => {
             if (isBody) {

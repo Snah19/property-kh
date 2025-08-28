@@ -7,17 +7,17 @@ import connectToMongoDB from "@/config/mongodb";
 import User from "@/models/user";
 import Link from "next/link";
 import Image from "next/image";
+import Property from "@/models/property";
 
-const PropertyInfo = async ({ property }) => {
+const PropertyInfo = async ({ propertyId }) => {
   await connectToMongoDB();
 
-  const { type, title, location, rates, beds, baths, square_feet, description, amenities, owner } = property;
+  const { type, title, location, rates, beds, baths, square_feet, description, amenities, owner } = await Property.findById(propertyId).select("-images");
   const { street, city, state, zipcode } = location;
   const { nightly, weekly, monthly } = rates;
 
   const { username, image } = await User.findById(owner);
 
-  console.log(username);
   return (
     <article>
       <div className="p-6 rounded-lg shadow-md text-center md:text-left bg-white">

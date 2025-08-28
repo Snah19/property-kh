@@ -1,4 +1,7 @@
 import updateProperty from "@/actions/update-property";
+import connectToMongoDB from "@/config/mongodb";
+import Property from "@/models/property";
+import { getSessionUser } from "@/utils/get-session-user";
 
 const types = [
   "Apartment",
@@ -37,13 +40,21 @@ const amenities = [
   "Mountain View",
 ];
 
-const UpdatePropertyForm = ({ property }) => {
+const UpdatePropertyForm = async ({ propertyId }) => {
+  await connectToMongoDB();
+  
+  const { userId } = await getSessionUser();
+  const property = await Property.findById(propertyId);
+
   const {street, city, state, zipcode} = property.location;
   const {beds, baths, square_feet} = property;
   const {nightly, weekly, monthly} = property.rates;
   const {name, email, phone} = property.seller_info;
 
   const updatePropertyById = updateProperty.bind(null, property._id.toString());
+
+  if (property.owner.toString() !== userId) throw new Error("You can't update this property!");
+
   return (
     <form action={updatePropertyById}>
       <h2 className="mb-6 text-3xl font-semibold text-center">Update</h2>
