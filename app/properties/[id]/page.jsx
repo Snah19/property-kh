@@ -4,12 +4,14 @@ import PropertyHeaderImage from "@/components/property-header-image";
 import PropertyHeaderImageFallback from "@/components/property-header-image-fallback";
 import PropertyImages from "@/components/property-images";
 import Property from "@/models/property";
+import connectToMongoDB from "@/config/mongodb";
 import { Suspense } from "react";
 
 const PropertyDetailPage = async ({ params }) => {
+  await connectToMongoDB();
   const { id } = await params;
-  const propertyDoc = await Property.findById(id).lean();
-  const property = JSON.parse(JSON.stringify(propertyDoc));
+  const { images } = await Property.findById(id).select("images");
+
   return (
     <>
       <Suspense fallback={<PropertyHeaderImageFallback />}>
@@ -18,7 +20,7 @@ const PropertyDetailPage = async ({ params }) => {
       <BackToProperties />
 
       <PropertyDetail propertyId={id} />
-      <PropertyImages images={property.images} />
+      <PropertyImages images={images} />
     </>
   );
 };
