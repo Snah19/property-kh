@@ -1,5 +1,12 @@
-import postProperty from "@/actions/post-property";
+"use client";
 
+import { uploadImagesToCloudinary } from "@/actions/cloudinary-actions";
+import axios from "axios";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { DotPulse } from 'ldrs/react';
+import 'ldrs/react/DotPulse.css';
+import { toast } from "react-toastify";
 
 const types = [
   "Apartment",
@@ -11,7 +18,6 @@ const types = [
   "Chalet",
   "Other"
 ];
-
 const amenities = [
   "Wifi",
   "Full kitchen",
@@ -38,9 +44,70 @@ const amenities = [
   "Mountain View",
 ];
 
-const PostPropertyForm = () => {
+const PostPropertyForm = ({ userId }) => {
+  const [pending, setPending] = useState(false);
+  const router = useRouter();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setPending(true);
+
+    try {
+      const formData = new FormData(e.target);
+
+      const imgFiles = formData.getAll("images").filter(file => file.name !== "");
+      const imagesBase64 = await Promise.all(
+        imgFiles.map(file => new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        }))
+      );
+      const imageURLs = await uploadImagesToCloudinary(imagesBase64);
+
+      const property = {
+        owner: userId,
+        type: formData.get("type"),
+        title: formData.get("title"),
+        description: formData.get("description"),
+        location: {
+          street: formData.get("location.street"),
+          city: formData.get("location.city"),
+          state: formData.get("location.state"),
+          zipcode: formData.get("location.zipcode")
+        },
+        beds: formData.get("beds"),
+        baths: formData.get("baths"),
+        square_feet: formData.get("square_feet"),
+        amenities: formData.getAll("amenities"),
+        rates: {
+          nightly: formData.get("rates.nightly"),
+          weekly: formData.get("rates.weekly"),
+          monthly: formData.get("rates.monthly")
+        },
+        seller_info: {
+          name: formData.get("seller_info.name"),
+          email: formData.get("seller_info.email"),
+          phone: formData.get("seller_info.phone")
+        },
+        images: imageURLs
+      };
+
+      const { data: { _id } } = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/properties/post`, property);
+      toast.success("Posted");
+      router.push(`/properties/${_id}`);
+    }
+    catch (error) {
+      console.error(error.message);
+    }
+    finally {
+      setPending(false);
+    }
+  };
+
   return (
-    <form action={postProperty}>
+    <form onSubmit={handleSubmit}>
       <h2 className="mb-6 text-3xl font-semibold text-center">Post</h2>
       
       {/* Type */}
@@ -160,8 +227,14 @@ const PostPropertyForm = () => {
         </div>
 
         <div>
-          <button className="w-full rounded-full py-2 px-4 font-bold bg-blue-500 hover:bg-blue-600 text-white" type="submit">
-            Submit
+          <button className="flex justify-center items-center gap-x-2 w-full rounded-full py-2 px-4 font-bold bg-blue-500 hover:bg-blue-600 text-white" type="submit" disabled={pending}>
+            {!pending && <span>Submit</span>}
+            {pending && (
+              <>
+                <span>Submiting</span>
+                <DotPulse size="30" speed="1.3" color="white" />
+              </>
+            )}
           </button>
         </div>
     </form>

@@ -33,7 +33,7 @@ export default function RootLayout({ children }) {
             <footer className="py-4 bg-gray-200">
               <Footer />
             </footer>
-            <ToastContainer />
+            <ToastContainer position="bottom-left" autoClose={3000} hideProgressBar={true} pauseOnHover={false} />
           </body>
         </html>
       </NotificationProvider>

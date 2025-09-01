@@ -1,17 +1,19 @@
-import User from "@/models/user";
 import Image from "next/image";
 import defaultProfile from "@/assets/images/default-profile.png";
-import connectToMongoDB from "@/config/mongodb";
 import PostedPropertyGrid from "@/components/posted-property-grid";
+import axios from "axios";
+import { getSessionUser } from "@/utils/get-session-user";
 
 export const metadata = {
   title: "Profile",
 };
 
 const ProfilePage = async ({ params }) => {
-  await connectToMongoDB();
-  const { userId } = await params;
-  const {username, email, image} = await User.findOne({_id: userId});
+  const { userId } = await getSessionUser();
+
+  const { ownerId } = await params;
+  const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users/id/${ownerId}`);
+  const { email, username, image } = data;
   
   return (
     <>
@@ -26,7 +28,7 @@ const ProfilePage = async ({ params }) => {
           </div>
           <h2 className="text-3xl font-bold">Posted Properties :</h2>
         </article>
-        <PostedPropertyGrid userId={userId} />
+        <PostedPropertyGrid userId={userId} ownerId={ownerId} />
       </section>
     </>
   );

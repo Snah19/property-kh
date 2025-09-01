@@ -12,10 +12,9 @@ export const NotificationProvider = ({ children }) => {
 
   useEffect(() => {
     if (session && session.user) {
-      getTotalUnreadMessages()
-        .then(res => {
+      getTotalUnreadMessages().then(res => {
           if (res.count) setUnreadCount(res.count);
-        });
+      });
     }
   }, [getTotalUnreadMessages, session]);
 

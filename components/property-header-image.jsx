@@ -1,14 +1,12 @@
-import connectToMongoDB from "@/config/mongodb";
+import axios from "axios";
 import Image from "next/image";
-import Property from "@/models/property";
 
 const PropertyHeaderImage = async ({ propertyId }) => {
-  connectToMongoDB();
-  const { images, title } = await Property.findById(propertyId).select("images title");
+  const { data: image } = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/properties/header-image/${propertyId}`);
   return (
     <section>
       <figure className="mx-auto">
-        <Image className="w-full h-[400px] object-cover" src={images[0]} width={1280} height={720} alt={title} />
+        <Image className="w-full h-[400px] object-cover" src={image} width={1280} height={720} alt="" />
       </figure>
     </section>
   );

@@ -1,16 +1,14 @@
 "use server";
 
-import connectToMongoDB from "@/config/mongodb";
-import Message from "@/models/message";
 import { getSessionUser } from "@/utils/get-session-user";
+import axios from "axios";
 
 const getTotalUnreadMessages = async () => {
-  await connectToMongoDB();
   const sessionUser = await getSessionUser();
-  if (!sessionUser || !sessionUser.userId) throw new Error("User ID is required");
+  if (!sessionUser || !sessionUser.userId) return { count: 0 };
   const { userId } = sessionUser;
 
-  const count = await Message.countDocuments({recipient_id: userId, is_read: false});
+  const { data: { count } } = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/messages/unread/${userId}`);
   
   return { count };
 };

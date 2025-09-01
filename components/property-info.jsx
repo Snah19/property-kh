@@ -3,20 +3,17 @@ import { HiLocationMarker } from "react-icons/hi";
 import { MdOutlineBed } from "react-icons/md";
 import { LuBath } from "react-icons/lu";
 import { LiaRulerCombinedSolid } from "react-icons/lia";
-import connectToMongoDB from "@/config/mongodb";
-import User from "@/models/user";
 import Link from "next/link";
 import Image from "next/image";
-import Property from "@/models/property";
+import axios from "axios";
 
-const PropertyInfo = async ({ propertyId }) => {
-  await connectToMongoDB();
-
-  const { type, title, location, rates, beds, baths, square_feet, description, amenities, owner } = await Property.findById(propertyId).select("-images");
+const PropertyInfo = async ({ property }) => {
+  const { type, title, location, rates, beds, baths, square_feet, description, amenities, owner } = property;
   const { street, city, state, zipcode } = location;
   const { nightly, weekly, monthly } = rates;
 
-  const { username, image } = await User.findById(owner);
+  const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users/id/${owner}`);
+  const { username, image } = data;
 
   return (
     <article>

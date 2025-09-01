@@ -7,9 +7,7 @@ export const metadata = {
 const PropertiesPage = async ({ searchParams }) => {
   const { page } = await searchParams;
   return (
-    <>
-      <PropertyGridSection page={Number(page)} />
-    </>
+    <PropertyGridSection page={Number(page)} />
   );
 };
 

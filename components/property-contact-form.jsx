@@ -1,10 +1,8 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
-import { useFormStatus } from "react-dom";
-import sendMessage from "@/actions/send-message";
-import { toast } from "react-toastify";
 import { FaPaperPlane } from "react-icons/fa";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const formElements = [
   {
@@ -36,28 +34,29 @@ const formElements = [
   },
 ];
 
-const PropertyContactForm = ({ propertyId, ownerId }) => {
-  const [state, formAction] = useActionState(sendMessage, {});
-  const { pending } = useFormStatus();
+const PropertyContactForm = ({ propertyId, senderId, recipientId }) => {
 
-  useEffect(() => {
-    if (state?.isSubmitted) {
-      toast.success(state.message || "Message sent!");
-      
-      const form = document.querySelector("form");
-      if (form) form.reset();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!senderId) {
+      toast.error("You need an account for this action");
+      return;
     }
-    else if (state?.error) {
-      toast.error(state.error);
+
+    const form = e.target;
+    const formData = Object.fromEntries(new FormData(form).entries());
+    const { name, email, phone_number, body } = formData;
+    const { data } = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/messages/`, { sender_id: senderId, recipient_id: recipientId, property_id: propertyId, name, email, phone_number, body });
+    if (data?.isSent) {
+      toast.success("Message is sent successfully");
+      form.reset();
     }
-  }, [state]);
+  };
 
   return (
     <div className="p-4 rounded-lg shadow-md bg-white">
       <h3 className="mb-6 text-xl font-bold">Contact Owner</h3>
-      <form action={formAction}>
-        <input type="hidden" name="property_id" defaultValue={propertyId} />
-        <input type="hidden" name="recipient_id" defaultValue={ownerId} />
+      <form onSubmit={handleSubmit}>
         <ul className="flex flex-col gap-y-4 mb-4">
           {formElements.map(({id, name, type, placeholder, required, isBody}) => {
             if (isBody) {
@@ -76,9 +75,7 @@ const PropertyContactForm = ({ propertyId, ownerId }) => {
         </ul>
         <button className="flex justify-center items-center gap-x-2 w-full py-2 px-4 font-bold rounded-full bg-blue-500 hover:bg-blue-600 text-white focus:outline-none" type="submit">
           <FaPaperPlane />
-          <span>
-            {pending ? "Sending" : "Send"}
-          </span>
+          <span>Send</span>
         </button>
       </form>
     </div>

@@ -1,21 +1,26 @@
-import connectToMongoDB from "@/config/mongodb";
-import { getSessionUser } from "@/utils/get-session-user";
-import Message from "@/models/message";
+"use client";
+
 import MessageCard from "@/components/message-card";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
-const MessageList = async () => {
-  await connectToMongoDB();
-  const { userId } = await getSessionUser();
-  const readMessages = await Message.find({ recipient_id: userId, is_read: true }).sort({ createdAt: -1 }).populate("sender_id", "username").populate("property_id", "title").lean();
-  const unreadMessages = await Message.find({ recipient_id: userId, is_read: false }).sort({ createdAt: -1 }).populate("sender_id", "username").populate("property_id", "title").lean();
-  const messages = [...unreadMessages, ...readMessages];
+const MessageList = ({ userId }) => {
+  const [messages, setMessages] = useState([]);
 
-  if (messages.length === 0) return <p className="text-center">No notifications</p>;
+  useEffect(() => {
+    const fetchMessages = async () => {
+      const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/messages/${userId}`);
+      setMessages([...data.filter(msg => !msg.is_read), ...data.filter(msg => msg.is_read)]);
+    };
+
+    fetchMessages();
+  }, []);
+
   return (
     <ul className="space-y-4">
-      {messages.map(({ _id, is_read, property_id: {title}, body, email, phone_number, createdAt }) => (
-        <li key={_id.toString()}>
-          <MessageCard _id={_id.toString()} is_read={is_read} title={title} body={body} email={email} phone_number={phone_number} createdAt={createdAt} />
+      {messages?.map(message => (
+        <li key={message._id}>
+          <MessageCard userId={userId} message={message} setMessages={setMessages} />
         </li>
       ))}
     </ul>
@@ -23,13 +28,3 @@ const MessageList = async () => {
 };
 
 export default MessageList;
-
-/*
-
-import { Wobble } from 'ldrs/react'
-import 'ldrs/react/Wobble.css'
-
-// Default values shown
-
-
-*/

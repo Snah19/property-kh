@@ -1,14 +1,12 @@
 import PropertyCard from "./property-card";
-import connectToMongoDB from "@/config/mongodb";
-import Property from "@/models/property";
 import Pagination from "./pagination";
+import axios from "axios";
 
 const PropertyList = async ({ page }) => {
-  await connectToMongoDB();
-  const total = await Property.countDocuments();
   const limit = 12;
-  const skip = (page - 1) * limit;
-  const properties = await Property.find().sort({ createdAt: -1 }).skip(skip).limit(limit);
+  const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/properties?limit=${limit}&page=${page}`);
+  const { properties, total } = data;
+
   return (
     <>
       <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">

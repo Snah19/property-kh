@@ -1,7 +1,11 @@
-import updateProperty from "@/actions/update-property";
-import connectToMongoDB from "@/config/mongodb";
-import Property from "@/models/property";
-import { getSessionUser } from "@/utils/get-session-user";
+"use client";
+
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "react-toastify";
+import { DotPulse } from 'ldrs/react';
+import 'ldrs/react/DotPulse.css';
 
 const types = [
   "Apartment",
@@ -13,7 +17,6 @@ const types = [
   "Chalet",
   "Other"
 ];
-
 const amenities = [
   "Wifi",
   "Full kitchen",
@@ -40,23 +43,64 @@ const amenities = [
   "Mountain View",
 ];
 
-const UpdatePropertyForm = async ({ propertyId }) => {
-  await connectToMongoDB();
-  
-  const { userId } = await getSessionUser();
-  const property = await Property.findById(propertyId);
+const UpdatePropertyForm = ({ ownerId, property }) => {
+  const [pending, setPending] = useState(false);
+  const router = useRouter();
 
   const {street, city, state, zipcode} = property.location;
-  const {beds, baths, square_feet} = property;
+  const {_id: propertyId, beds, baths, square_feet} = property;
   const {nightly, weekly, monthly} = property.rates;
   const {name, email, phone} = property.seller_info;
 
-  const updatePropertyById = updateProperty.bind(null, property._id.toString());
+  if (property.owner !== ownerId) throw new Error("You can't update this property!");
 
-  if (property.owner.toString() !== userId) throw new Error("You can't update this property!");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setPending(true);
+
+    try {
+      const formData = new FormData(e.target);
+      const property = {
+        owner: ownerId,
+        type: formData.get("type"),
+        title: formData.get("title"),
+        description: formData.get("description"),
+        location: {
+          street: formData.get("location.street"),
+          city: formData.get("location.city"),
+          state: formData.get("location.state"),
+          zipcode: formData.get("location.zipcode")
+        },
+        beds: formData.get("beds"),
+        baths: formData.get("baths"),
+        square_feet: formData.get("square_feet"),
+        amenities: formData.getAll("amenities"),
+        rates: {
+          nightly: formData.get("rates.nightly"),
+          weekly: formData.get("rates.weekly"),
+          monthly: formData.get("rates.monthly")
+        },
+        seller_info: {
+          name: formData.get("seller_info.name"),
+          email: formData.get("seller_info.email"),
+          phone: formData.get("seller_info.phone")
+        }
+      };
+
+      const { data: { _id } } = await axios.patch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/properties/update/${propertyId}`, property);
+      toast.success("Updated");
+      router.push(`/properties/${_id}`);
+    }
+    catch (error) {
+      console.error(error.message);
+    }
+    finally {
+      setPending(false);
+    }
+  }
 
   return (
-    <form action={updatePropertyById}>
+    <form onSubmit={handleSubmit}>
       <h2 className="mb-6 text-3xl font-semibold text-center">Update</h2>
       {/* Type */}
       <div className="mb-4">
@@ -165,8 +209,14 @@ const UpdatePropertyForm = async ({ propertyId }) => {
       </ul>
 
       <div>
-        <button className="w-full rounded-full py-2 px-4 font-bold bg-blue-500 hover:bg-blue-600 text-white" type="submit">
-          Submit
+        <button className="flex justify-center items-center gap-x-2 w-full rounded-full py-2 px-4 font-bold bg-blue-500 hover:bg-blue-600 text-white" type="submit" disabled={pending}>
+          {!pending && <span>Submit</span>}
+          {pending && (
+            <>
+              <span>Submiting</span>
+              <DotPulse size="30" speed="1.3" color="white" />
+            </>
+          )}
         </button>
       </div>
     </form>

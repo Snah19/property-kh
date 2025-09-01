@@ -9,7 +9,7 @@ import { HiLocationMarker } from "react-icons/hi";
 import { MdEdit } from "react-icons/md";
 import DeletePropertyButton from "./delete-property-button";
 
-const PostedPropertyCard = ({ property }) => {
+const PostedPropertyCard = ({ userId, property, setProperties }) => {
   return (
     <article className="relative rounded-xl shadow-md">
 
@@ -73,7 +73,7 @@ const PostedPropertyCard = ({ property }) => {
           </div>
           <div className="flex gap-x-2">
             <Link className="group flex justify-center items-center" href={`/update-property/${property._id.toString()}`}><MdEdit className="group-hover:text-blue-500" /></Link>
-            <DeletePropertyButton propertyId={property._id.toString()} />
+            <DeletePropertyButton userId={userId} propertyId={property._id} images={property.images} setProperties={setProperties} />
           </div>
         </div>
       </div>

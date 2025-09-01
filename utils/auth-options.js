@@ -1,6 +1,5 @@
-import connectToMongoDB from "@/config/mongodb";
 import GoogleProvider from "next-auth/providers/google";
-import User from "@/models/user";
+import axios from "axios";
 
 export const authOptions = {
   providers: [
@@ -18,22 +17,17 @@ export const authOptions = {
   ],
   callbacks: {
     async signIn({ profile }) {
-      const { email, name, picture: image} = profile;
-      const username = name.slice(0, 20);
+      const { email, name, picture} = profile;
 
-      await connectToMongoDB();
-      const userExists = await User.findOne({ email });
+      const { data: existingUser} = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users/email/${email}`);
 
-      if (!userExists) {
-        await User.create({ email, username, image });   
-      }
-
+      if (!existingUser) await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users/`, { email, username: name.slice(0, 20), image: picture });
       return true;
     },
     
     async session({ session }) {
-      const user = await User.findOne({email: session.user.email});
-      session.user.id = user._id.toString();
+      const { data: { _id } } = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users/email/${session.user.email}`);
+      session.user.id = _id;
       return session;
     }
   },
